@@ -1,7 +1,7 @@
 {
   "name": "page-maker",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "A webpage maker",
   "author": "MuddledKami <kevinbai0822@163.com>",
   "private": true,
   "scripts": {
