@@ -2,7 +2,9 @@
 	<div>
 		<div class="wrap">
 			<div class="show-box" :style="{width: toWidth+'px', height: toHeight+'px'}">
-				<div v-for="box in showBox" :key="box.id" :style="box.style"></div>
+				<div class="wrapper-box">
+					<div v-for="box in showBox" :key="box.id" :style="box.style"></div>
+				</div>
 			</div>
 			<div class="toolbar">
 				<div class="i-btn" v-for="ti in toolItem" :key="ti.id" @click="boxSplit(ti.arr)">
@@ -10,8 +12,8 @@
 				</div>
 			</div>
 			<div class="custom-panel" ref="customPanel">
-				<ul v-for="(cb, cindex) in customBox">
-					<li v-for="(sb, sindex) in cb.subBox" class="cus-box"
+				<ul v-for="(cb, cindex) in customBox" :key="cb.id">
+					<li v-for="(sb, sindex) in cb.subBox" :key="sb.id" class="cus-box"
 					@click.stop="startCus(sindex, cindex)"
 					@mousemove.stop="movePos(sindex, cindex)"
 					></li>
@@ -22,6 +24,7 @@
 				<div class="mab mab-active" :style="inBox" v-if="isMove"></div>
 			</div>
 		</div>
+		<button @click="niubi()">qwshuu</button>
 	</div>
 </template>
 
@@ -136,7 +139,9 @@ export default {
 				top: 0,
 				width: 0,
 				height: 0
-			}
+			},
+			spacing: 10,
+			boxArea: []
 		}
 	},
 	mounted(){
@@ -158,6 +163,8 @@ export default {
 		},
 		startCus(si, ci){
 			this.isMove = !this.isMove
+			console.log(si)
+			console.log(ci)
 			for(let key in this.startPoint){
 				delete this.startPoint[key]
 			}
@@ -174,10 +181,21 @@ export default {
 						height: null
 					}
 				}
+				var showTemp = {
+					style: {
+						left: null,
+						top: null,
+						width: null,
+						height: null
+					}
+				}
 				for(let i in this.inBox){
 					temp.style[i] = this.inBox[i]
+					showTemp.style[i] = parseInt(this.inBox[i]) / 192 * this.toWidth + 'px'
+					// showTemp.style[i] = this.inBox[i] / 192 * this.toWidth
 				}				
 				this.inBoxPanel.push(temp)
+				this.showBox.push(showTemp)
 			}
 		},
 		// getMousePos(event) {
@@ -206,6 +224,9 @@ export default {
 				this.inBox.width = (Math.abs(ci - this.startPoint.x) + 1) * 32 + 'px'
 				this.inBox.height = (Math.abs(si - this.startPoint.y) + 1) * 32 + 'px'
 			}
+		},
+		niubi(){
+
 		}
 	}
 }
@@ -215,6 +236,9 @@ export default {
 <style lang="scss">
 .wrap {
   display: flex;
+  div{
+	  box-sizing: border-box;
+  }
   .show-box {
     position: relative;
     border: 1px solid rgb(141, 134, 134);
@@ -222,6 +246,10 @@ export default {
 		position: absolute;
 		border: 1px solid #46e832;
     }
+	.wrapper-box{
+		position: relative;
+		border: 0!important;
+	}
   }
   .toolbar {
     display: flex;
